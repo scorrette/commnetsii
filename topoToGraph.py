@@ -10,7 +10,7 @@ def createGraph(v_count,vertices,net): #create graph based on number of vertices
                 g.graph[x,y] = 1
                 g.graph[y,x] = 1  #add in edge into adjacent matrix with cost of 1
 
-g.dijkstra(0)
+    g.dijkstra(0)
 
 def run():
     topo = NetworkTopo()
