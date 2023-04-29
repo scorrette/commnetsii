@@ -15,7 +15,7 @@ def create_packet(seq, ttl, src, dests, data):
         header = struct.pack('BBBBBL', PKT_TYPE, seq, ttl, 2, dests[0], dests[1])
     elif len(dests) == 3:
         header = struct.pack('BBBBBL', PKT_TYPE, seq, ttl, 3, dests[0], dests[1], dests[2])
-    return header + data
+    return header + bytes(data,"utf-8")
 
 
 def read_header(pkt):
