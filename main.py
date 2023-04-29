@@ -60,8 +60,15 @@ if __name__ == '__main__':
 
     net = Net()
 
-    for node in net:
-        net[node].start_listener()
+    # Start listener on all routers and clients
+    for node in net.hosts:
+        node.start_listener()
+
+    # Learn topo/djititjariasdj algortithm
+
+    # Send multicast packet from host
+    
+    # whatever else
 
     CLI(net)
     net.stop()
