@@ -20,7 +20,7 @@ class host:
 
         while True:
             packet, addr = s.recvfrom(1024)
-            pktType = struct.unpack("B", packet)
+            pktType = struct.unpack("B", packet[0:struct.calcsize("B")])
 
             # HELLO
             if pktType == 1:
@@ -40,6 +40,19 @@ class host:
 
             # Unicast
             if pktType == 4:
+                _, seq, ttl, src, dest = unicast.read_header()
+
+                if dest == self.id:
+                    pktContent = unicast.read_content()
+                    contentType = struct.unpack("B", pktContent[0:struct.calcsize("B")])
+
+                    # If the packet was a multicast packet destined for itself
+                    if contentType == 3:
+                        # TODO two behaviors. If this is static RP, forward to dynamic RP. If this is not (then this is dynamic RP) split and unicast packet forward
+
+                    else:
+                        print(self.id + " received packet from: " + src)
+
                 pass
 
     def multicast(self, ):
