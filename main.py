@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 from mininet.net import Mininet
-from mininet.log import lg, info
+from mininet.log import setLogLevel, info
 from mininet.cli import CLI
 from mininet.node import Node
+from mininet.link import TCLink
 from mininet.clean import Cleanup
 
 class MyHost( Node ):
@@ -17,18 +18,18 @@ class MyHost( Node ):
 
 class Net(Mininet):
     def __init__(self):
-        Mininet.__init__(self, controller = None, cleanup = True)
+        Mininet.__init__(self, link = TCLink, controller = None, cleanup = True)
 
         # Creating Hosts
-        info("Creating nodes\n")
-        r1 = self.addHost('r1', cls = MyHost, inNamespace = False)
-        r2 = self.addHost('r2', cls = MyHost, inNamespace = False)
-        h1 = self.addHost('h1', cls = MyHost, inNamespace = False)
-        h2 = self.addHost('h2', cls = MyHost, inNamespace = False)
-        h3 = self.addHost('h3', cls = MyHost, inNamespace = False)
+        info("*** Creating nodes\n")
+        r1 = self.addHost('r1', cls = MyHost)
+        r2 = self.addHost('r2', cls = MyHost)
+        h1 = self.addHost('h1', cls = MyHost)
+        h2 = self.addHost('h2', cls = MyHost)
+        h3 = self.addHost('h3', cls = MyHost)
 
         # Establishing the links from hosts to routers
-        info("Creating links\n")
+        info("*** Creating links\n")
         self.addLink(h1, r1, intfName2='r1-eth0')
         self.addLink(h2, r2, intfName2='r2-eth2')
         self.addLink(h3, r2, intfName2='r2-eth3')
@@ -56,9 +57,13 @@ class Net(Mininet):
 
 
 if __name__ == '__main__':
+    setLogLevel('info')
+
     Cleanup.cleanup()
 
     net = Net()
+    net.build()
+    net.start()
 
     # Start listener on all routers and clients
     for node in net.hosts:
