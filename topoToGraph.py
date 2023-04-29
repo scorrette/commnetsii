@@ -24,8 +24,6 @@ def createGraph(h_count, r_count, net):
                 elif x == y:
                     g.graph[x][y] = 0
 
-    print(g.graph)
-
     # picks first router which we assume to be default RP as source, and returns distance list with corresponding vertice as index after dijkstra
     dist = g.dijkstra(h_count)
     for i in range(h_count):
@@ -34,9 +32,9 @@ def createGraph(h_count, r_count, net):
         else:
             nodeHop_map.append((net.hosts[i], dist[i]))
 
-    print(nodeHop_map)
+    return nodeHop_map
 
-def getNodeHopMap( net ): ##This should be done in top file, but can call createGraph from Top file
+def getNodeHopMap( net ):
     rcount = 0
     hcount = 0
 
@@ -46,7 +44,7 @@ def getNodeHopMap( net ): ##This should be done in top file, but can call create
         else:
             rcount = rcount + 1
 
-    createGraph(hcount, rcount, net)
+    return createGraph(hcount, rcount, net)
 
 if __name__ == '__main__':
     getNodeHopMap()
