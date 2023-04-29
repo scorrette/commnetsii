@@ -3,12 +3,13 @@ from mininet.net import Mininet
 from mininet.log import lg, info
 from mininet.cli import CLI
 from mininet.node import Node
+from mininet.clean import Cleanup
 
 class MyHost( Node ):
     def config( self, **params ):
         super( MyHost, self).config( **params )
 
-    def start_listener():
+    def start_listener( self ):
         print('Hello World!')
 
     def terminate( self ):
@@ -20,11 +21,11 @@ class Net(Mininet):
 
         # Creating Hosts
         info("Creating nodes\n")
-        r1 = self.addHost('r1', inNamespace=False)
-        r2 = self.addHost('r2', inNamespace=False)
-        h1 = self.addHost('h1', inNamespace=False)
-        h2 = self.addHost('h2', inNamespace=False)
-        h3 = self.addHost('h3', inNamespace=False)
+        r1 = self.addHost('r1', cls = MyHost, inNamespace = False)
+        r2 = self.addHost('r2', cls = MyHost, inNamespace = False)
+        h1 = self.addHost('h1', cls = MyHost, inNamespace = False)
+        h2 = self.addHost('h2', cls = MyHost, inNamespace = False)
+        h3 = self.addHost('h3', cls = MyHost, inNamespace = False)
 
         # Establishing the links from hosts to routers
         info("Creating links\n")
@@ -52,15 +53,15 @@ class Net(Mininet):
         h1.cmd('ip route add default via 192.168.1.2')
         h2.cmd('ip route add default via 192.168.2.2')
         h3.cmd('ip route add default via 192.168.3.2')
-        r1.cmd('sysctl net.ipv4.ip_forward=1')
-        r2.cmd('sysctl net.ipv4.ip_forward=1')
 
 
 if __name__ == '__main__':
+    Cleanup.cleanup()
+
     net = Net()
 
     for node in net:
-        node.start_listener()
+        net[node].start_listener()
 
     CLI(net)
     net.stop()

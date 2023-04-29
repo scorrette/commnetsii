@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import struct
 import sys
 from socket import socket, AF_INET, SOCK_DGRAM
