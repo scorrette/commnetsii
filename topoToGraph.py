@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from test4 import NetworkTopo, run
 from mininet.topo import Topo
 from mininet.net import Mininet

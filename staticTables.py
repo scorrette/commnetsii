@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 # define network both here and on top level file
 
 nodes = {

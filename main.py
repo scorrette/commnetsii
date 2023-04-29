@@ -1,10 +1,20 @@
+#!/usr/bin/python3
 from mininet.net import Mininet
 from mininet.log import lg, info
 from mininet.cli import CLI
 from mininet.node import Node
 
-class Net(Mininet):
+class MyHost( Node ):
+    def config( self, **params ):
+        super( MyHost, self).config( **params )
 
+    def start_listener():
+        print('Hello World!')
+
+    def terminate( self ):
+        super( MyHost, self ).terminate()
+
+class Net(Mininet):
     def __init__(self):
         Mininet.__init__(self, controller = None, cleanup = True)
 
@@ -51,8 +61,6 @@ if __name__ == '__main__':
 
     for node in net:
         node.start_listener()
-
-    net['h2'].multicast()
 
     CLI(net)
     net.stop()
