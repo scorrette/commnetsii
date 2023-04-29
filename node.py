@@ -49,6 +49,7 @@ class host:
                     # If the packet was a multicast packet destined for itself
                     if contentType == 3:
                         # TODO two behaviors. If this is static RP, forward to dynamic RP. If this is not (then this is dynamic RP) split and unicast packet forward
+                        pass
 
                     else:
                         print(self.id + " received packet from: " + src)
