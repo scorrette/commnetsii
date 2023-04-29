@@ -15,6 +15,6 @@ def create_packet(seq, ttl, src, dest):
 
 def read_header(pkt):
     header = pkt[0:32]
-    # pktFormat = "BBBL"
+    # pktFormat = "BBBLL"
     pkttype, seq, ttl, src, dest = struct.unpack("BBBLL", header)
     return pkttype, seq, ttl, src, dest
