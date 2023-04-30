@@ -12,6 +12,7 @@ def createGraph(h_count, r_count, net):
     links= []
     dist = []
     nodeHop_map=[]
+    router_nodeHop=[]
 
     for each in net.links:
         links.append(each)
@@ -25,13 +26,16 @@ def createGraph(h_count, r_count, net):
                     g.graph[x][y] = 0
 
     # picks first router which we assume to be default RP as source, and returns distance list with corresponding vertice as index after dijkstra
-    dist = g.dijkstra(h_count)
-    for i in range(h_count):
-        if i == 0:
-            continue
-        else:
-            nodeHop_map.append((net.hosts[i], dist[i]))
-
+    
+    for j in range r_count:  #find nodehop map for each router
+        dist = g.dijkstra(h_count+j)
+        router_nodeHop=[]
+        for i in range(h_count):
+            if i == 0:
+                continue
+            else:
+                router_nodeHop.append((net.hosts[i], dist[i]))
+        nodeHop_map.append(router_nodeHop)  #add map of router nodehops, to overall nodeHopmap 
     return nodeHop_map
 
 def getNodeHopMap( net ):
@@ -45,6 +49,3 @@ def getNodeHopMap( net ):
             rcount = rcount + 1
 
     return createGraph(hcount, rcount, net)
-
-if __name__ == '__main__':
-    getNodeHopMap()
