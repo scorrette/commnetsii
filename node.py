@@ -72,7 +72,6 @@ class host:
         MasterNodeHopMap= getNodeHopMap(net)
         dist_array=[]
         router_longest_dist=[]  #array of longest dist of each router
-        ideal_router????
         for routerNodeHopMap in MasterNodeHopMap:
             for dest in routerNodeHopMap:
                 dist_array.append(dest[1])
