@@ -4,19 +4,22 @@ import sys
 from topoToGraph import getNodeHopMap
 from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
-
 from packets import hello, helloACK, multicast, unicast
-
 from mininet.node import Node
 
 class MyHost (Node):
 
-    def config( self, **params ):
-        super( MyHost, self).config( **params )
+    def __init__(self, name, id, ip, port, isStaticRP):
+        self.name = name
+        self.id = id
+        self.ip = ip
+        self.port = port
+        self.staticRP = isStaticRP
+
 
     def start_listener(self):
         s = socket(AF_INET, SOCK_DGRAM)
-        s.bind((self.params["ip"], self.params["port"]))
+        s.bind((self.ip, self.port))
 
         while True:
             packet, addr = s.recvfrom(1024)
@@ -25,14 +28,14 @@ class MyHost (Node):
             # HELLO
             if pktType == 1:
                 _, seq, ttl, src = hello.read_header(packet)
-                print(self.params["id"] + " received HELLO packet from: " + src)
-                print(self.params["id"] + " sending reply to " + src)
-                helloACK.create_packet(seq, ttl, self.params["id"], src)
+                print(self.id + " received HELLO packet from: " + src)
+                print(self.id + " sending reply to " + src)
+                helloACK.create_packet(seq, ttl, self.id, src)
 
             # HELLO ACK
             if pktType == 2:
                 _, seq, ttl, src, dest = helloACK.read_header(packet)
-                print(self.params["id"] + " received HELLOACK from: " + src)
+                print(self.id + " received HELLOACK from: " + src)
 
             # Multicast
             if pktType == 3:
@@ -42,7 +45,7 @@ class MyHost (Node):
             if pktType == 4:
                 _, seq, ttl, src, dest = unicast.read_header()
 
-                if dest == self.params["id"]:
+                if dest == self.id:
                     pktContent = unicast.read_content()
                     contentType = struct.unpack("B", pktContent[0:struct.calcsize("B")])
 
@@ -52,7 +55,7 @@ class MyHost (Node):
                         pass
 
                     else:
-                        print(self.params["id"] + " received packet from: " + src)
+                        print(self.id + " received packet from: " + src)
 
                 pass
 
@@ -66,8 +69,6 @@ class MyHost (Node):
             if (inp == "multicast"):
                 self.multicast()
 
-    def isStaticRP(self):
-        return "staticRP" in self.params.keys()
 
 
     def staticRPRoutine(self,k,n,net):
@@ -112,14 +113,12 @@ class MyHost (Node):
         self.dynamicRP = router_name  #**sets name of the router to dynamicRP var of node**  
 
 
-    def terminate( self ):
-        super( MyHost, self ).terminate()
-
 if __name__ == '__main__':
 
     # TODO change ip assignment and static RP to sys arg
     isStaticRP = True
-    h = MyHost("r1", "192.168.0.1", "8888", isStaticRP)
+    # name, id, ip, port, isStaticRP
+    h = MyHost(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 
     if isStaticRP:
         h.staticRPRoutine()
