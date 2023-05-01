@@ -69,7 +69,26 @@ class MyHost (Node):
     def isStaticRP(self):
         return "staticRP" in self.params.keys()
 
+
     def staticRPRoutine(self,k,n,net):
+        def insertionSort(arr):
+
+            if (n := len(arr)) <= 1:
+                return arr
+            for i in range(1, n):
+
+                key = arr[i]
+
+                # Move elements of arr[0..i-1], that are
+                # greater than key, to one position ahead
+                # of their current position
+                j = i - 1
+                while j >= 0 and key < arr[j]:
+                    arr[j + 1] = arr[j]
+                    j -= 1
+                arr[j + 1] = key
+            return
+
         # TODO add dijkstra here. Calculate Dyn RP
         MasterNodeHopMap= getNodeHopMap(net)
         dist_array=[]
@@ -91,23 +110,7 @@ class MyHost (Node):
                 index = i
         router_name = "r" + str(index+1)  #assuming router starts at r1 and increments, and all the routers from the nodehopmap are sorted in ascending order(they should be)
         self.dynamicRP = router_name  #**sets name of the router to dynamicRP var of node**  
-    def insertionSort(arr):
-         
-        if (n := len(arr)) <= 1:
-          return arr
-        for i in range(1, n):
-             
-            key = arr[i]
-     
-            # Move elements of arr[0..i-1], that are
-            # greater than key, to one position ahead
-            # of their current position
-            j = i-1
-            while j >=0 and key < arr[j] :
-                    arr[j+1] = arr[j]
-                    j -= 1
-            arr[j+1] = key
-        return
+
 
     def terminate( self ):
         super( MyHost, self ).terminate()
