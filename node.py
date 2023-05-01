@@ -89,7 +89,7 @@ class host:
                 shortest = router_longest_dist[i]
                 index = i
         router_name = "r" + str(index+1)  #assuming router starts at r1 and increments, and all the routers from the nodehopmap are sorted in ascending order(they should be)
-        return router_name  #**return string, name of the router, instead of the actual router node**
+        self.dynamicRP = router_name  #**sets name of the router to dynamicRP var of node**  
     def insertionSort(arr):
          
         if (n := len(arr)) <= 1:
