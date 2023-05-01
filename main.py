@@ -12,20 +12,20 @@ class ExampleNet1(Mininet):
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port='8888', id=1)
-        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.2/24', port='8888', id=2)
-        r3 = self.addHost('r3', cls=MyHost, ip='10.0.2.2/24', port='8888', id=3)
-        r4 = self.addHost('r4', cls=MyHost, ip='10.0.4.1/24', port='8888', id=4)
-        r5 = self.addHost('r5', cls=MyHost, ip='10.0.4.2/24', port='8888', id=5, staticRP=True)
-        r6 = self.addHost('r6', cls=MyHost, ip='10.0.3.2/24', port='8888', id=6)
-        r7 = self.addHost('r7', cls=MyHost, ip='10.0.7.1/24', port='8888', id=7)
-        r8 = self.addHost('r8', cls=MyHost, ip='10.0.7.2/24', port='8888', id=8)
-        r9 = self.addHost('r9', cls=MyHost, ip='10.0.6.2/24', port='8888', id=9)
+        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port=8888, id=1)
+        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.2/24', port=8888, id=2)
+        r3 = self.addHost('r3', cls=MyHost, ip='10.0.2.2/24', port=8888, id=3)
+        r4 = self.addHost('r4', cls=MyHost, ip='10.0.4.1/24', port=8888, id=4)
+        r5 = self.addHost('r5', cls=MyHost, ip='10.0.4.2/24', port=8888, id=5, staticRP=True)
+        r6 = self.addHost('r6', cls=MyHost, ip='10.0.3.2/24', port=8888, id=6)
+        r7 = self.addHost('r7', cls=MyHost, ip='10.0.7.1/24', port=8888, id=7)
+        r8 = self.addHost('r8', cls=MyHost, ip='10.0.7.2/24', port=8888, id=8)
+        r9 = self.addHost('r9', cls=MyHost, ip='10.0.6.2/24', port=8888, id=9)
 
         info("*** Creating hosts\n")
-        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', port='8888', id=10, defaultRoute='via 192.168.1.2/24')
-        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', port='8888', id=11, defaultRoute='via 192.168.2.2/24')
-        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', port='8888', id=12, defaultRoute='via 192.168.3.2/24')
+        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', port=8888, id=10, defaultRoute='via 192.168.1.2/24')
+        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', port=8888, id=11, defaultRoute='via 192.168.2.2/24')
+        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', port=8888, id=12, defaultRoute='via 192.168.3.2/24')
 
         # Establishing the links from hosts to routers
         info("*** Creating links\n")
@@ -67,19 +67,19 @@ class ExampleNet2(Mininet):
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port='8888', id=1)
-        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.2/24', port='8888', id=2)
-        r3 = self.addHost('r3', cls=MyHost, ip='10.0.1.3/24', port='8888', id=3, staticRP=True)
-        r4 = self.addHost('r4', cls=MyHost, ip='10.0.1.4/24', port='8888', id=4)
-        r5 = self.addHost('r5', cls=MyHost, ip='10.0.2.2/24', port='8888', id=5)
-        r6 = self.addHost('r6', cls=MyHost, ip='10.0.3.2/24', port='8888', id=6)
-        r7 = self.addHost('r7', cls=MyHost, ip='10.0.4.2/24', port='8888', id=7)
+        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port=8888, id=1)
+        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.2/24', port=8888, id=2)
+        r3 = self.addHost('r3', cls=MyHost, ip='10.0.1.3/24', port=8888, id=3, staticRP=True)
+        r4 = self.addHost('r4', cls=MyHost, ip='10.0.1.4/24', port=8888, id=4)
+        r5 = self.addHost('r5', cls=MyHost, ip='10.0.2.2/24', port=8888, id=5)
+        r6 = self.addHost('r6', cls=MyHost, ip='10.0.3.2/24', port=8888, id=6)
+        r7 = self.addHost('r7', cls=MyHost, ip='10.0.4.2/24', port=8888, id=7)
 
         info("*** Creating hosts\n")
-        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', port='8888', id=8, defaultRoute='via 192.168.1.2/24')
-        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', port='8888', id=9, defaultRoute='via 192.168.2.2/24')
-        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', port='8888', id=10, defaultRoute='via 192.168.3.2/24')
-        h4 = self.addHost('h4', cls=MyHost, ip='192.168.4.1/24', port='8888', id=11, defaultRoute='via 192.168.4.2/24')
+        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', port=8888, id=8, defaultRoute='via 192.168.1.2/24')
+        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', port=8888, id=9, defaultRoute='via 192.168.2.2/24')
+        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', port=8888, id=10, defaultRoute='via 192.168.3.2/24')
+        h4 = self.addHost('h4', cls=MyHost, ip='192.168.4.1/24', port=8888, id=11, defaultRoute='via 192.168.4.2/24')
 
         # Establishing the links from hosts to routers
         info("*** Creating links\n")
@@ -120,18 +120,18 @@ class ExampleNet3(Mininet):
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port='8888', id=1)
-        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.3/24', port='8888', id=2)
-        r3 = self.addHost('r3', cls=MyHost, ip='10.0.1.4/24', port='8888', id=3)
-        r4 = self.addHost('r4', cls=MyHost, ip='10.0.4.1/24', port='8888', id=4)
-        r5 = self.addHost('r5', cls=MyHost, ip='10.0.3.2/24', port='8888', id=5, staticRP=True)
-        r6 = self.addHost('r6', cls=MyHost, ip='10.0.5.2/24', port='8888', id=6)
+        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port=8888, id=1)
+        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.3/24', port=8888, id=2)
+        r3 = self.addHost('r3', cls=MyHost, ip='10.0.1.4/24', port=8888, id=3)
+        r4 = self.addHost('r4', cls=MyHost, ip='10.0.4.1/24', port=8888, id=4)
+        r5 = self.addHost('r5', cls=MyHost, ip='10.0.3.2/24', port=8888, id=5, staticRP=True)
+        r6 = self.addHost('r6', cls=MyHost, ip='10.0.5.2/24', port=8888, id=6)
 
         info("*** Creating hosts\n")
-        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', port='8888', id=7, defaultRoute='via 192.168.1.2/24')
-        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', port='8888', id=8, defaultRoute='via 192.168.2.2/24')
-        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', port='8888', id=9, defaultRoute='via 192.168.3.2/24')
-        h4 = self.addHost('h4', cls=MyHost, ip='192.168.4.1/24', port='8888', id=10, defaultRoute='via 192.168.4.2/24')
+        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', port=8888, id=7, defaultRoute='via 192.168.1.2/24')
+        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', port=8888, id=8, defaultRoute='via 192.168.2.2/24')
+        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', port=8888, id=9, defaultRoute='via 192.168.3.2/24')
+        h4 = self.addHost('h4', cls=MyHost, ip='192.168.4.1/24', port=8888, id=10, defaultRoute='via 192.168.4.2/24')
 
         # Establishing the links from hosts to routers
         info("*** Creating links\n")
