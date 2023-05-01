@@ -27,7 +27,7 @@ def createGraph(h_count, r_count, net):
 
     # picks first router which we assume to be default RP as source, and returns distance list with corresponding vertice as index after dijkstra
     
-    for j in range r_count:  #find nodehop map for each router
+    for j in range(r_count):  #find nodehop map for each router
         dist = g.dijkstra(h_count+j)
         router_nodeHop=[]
         for i in range(h_count):
