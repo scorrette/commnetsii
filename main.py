@@ -2,39 +2,30 @@
 from mininet.net import Mininet
 from mininet.log import setLogLevel, info
 from mininet.cli import CLI
-from mininet.node import Node
 from mininet.clean import Cleanup
+from node import MyHost
 
-class MyHost( Node ):
-    def config( self, **params ):
-        super( MyHost, self).config( **params )
-
-    def start_listener( self ):
-        print('Hello World!')
-
-    def terminate( self ):
-        super( MyHost, self ).terminate()
 
 class ExampleNet1(Mininet):
     def __init__(self):
-        Mininet.__init__(self, controller = None, cleanup = True)
+        Mininet.__init__(self, controller=None, cleanup=True)
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', cls = MyHost, ip = '10.0.1.1/24')
-        r2 = self.addHost('r2', cls = MyHost, ip = '10.0.1.2/24')
-        r3 = self.addHost('r3', cls = MyHost, ip = '10.0.2.2/24')
-        r4 = self.addHost('r4', cls = MyHost, ip = '10.0.4.1/24')
-        r5 = self.addHost('r5', cls = MyHost, ip = '10.0.4.2/24')
-        r6 = self.addHost('r6', cls = MyHost, ip = '10.0.3.2/24')
-        r7 = self.addHost('r7', cls = MyHost, ip = '10.0.7.1/24')
-        r8 = self.addHost('r8', cls = MyHost, ip = '10.0.7.2/24')
-        r9 = self.addHost('r9', cls = MyHost, ip = '10.0.6.2/24')
+        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24', port='8888', id=1, staticRP=True)
+        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.2/24', port='8888', id=2)
+        r3 = self.addHost('r3', cls=MyHost, ip='10.0.2.2/24', port='8888', id=3)
+        r4 = self.addHost('r4', cls=MyHost, ip='10.0.4.1/24', port='8888', id=4)
+        r5 = self.addHost('r5', cls=MyHost, ip='10.0.4.2/24', port='8888', id=5)
+        r6 = self.addHost('r6', cls=MyHost, ip='10.0.3.2/24', port='8888', id=6)
+        r7 = self.addHost('r7', cls=MyHost, ip='10.0.7.1/24', port='8888', id=7)
+        r8 = self.addHost('r8', cls=MyHost, ip='10.0.7.2/24', port='8888', id=8)
+        r9 = self.addHost('r9', cls=MyHost, ip='10.0.6.2/24', port='8888', id=9)
 
         info("*** Creating hosts\n")
-        h1 = self.addHost('h1', cls = MyHost, ip = '192.168.1.1/24', defaultRoute = 'via 192.168.1.2/24')
-        h2 = self.addHost('h2', cls = MyHost, ip = '192.168.2.1/24', defaultRoute = 'via 192.168.2.2/24')
-        h3 = self.addHost('h3', cls = MyHost, ip = '192.168.3.1/24', defaultRoute = 'via 192.168.3.2/24')
+        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', defaultRoute='via 192.168.1.2/24')
+        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', defaultRoute='via 192.168.2.2/24')
+        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', defaultRoute='via 192.168.3.2/24')
 
         # Establishing the links from hosts to routers
         info("*** Creating links\n")
@@ -69,25 +60,26 @@ class ExampleNet1(Mininet):
         r6.setIP('192.168.2.2/24', intf='r6-eth2')
         r9.setIP('192.168.3.2/24', intf='r9-eth2')
 
+
 class ExampleNet2(Mininet):
     def __init__(self):
-        Mininet.__init__(self, controller = None, cleanup = True)
+        Mininet.__init__(self, controller=None, cleanup=True)
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', cls = MyHost, ip = '10.0.1.1/24')
-        r2 = self.addHost('r2', cls = MyHost, ip = '10.0.1.2/24')
-        r3 = self.addHost('r3', cls = MyHost, ip = '10.0.1.3/24')
-        r4 = self.addHost('r4', cls = MyHost, ip = '10.0.1.4/24')
-        r5 = self.addHost('r5', cls = MyHost, ip = '10.0.2.2/24')
-        r6 = self.addHost('r6', cls = MyHost, ip = '10.0.3.2/24')
-        r7 = self.addHost('r7', cls = MyHost, ip = '10.0.4.2/24')
+        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24')
+        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.2/24')
+        r3 = self.addHost('r3', cls=MyHost, ip='10.0.1.3/24')
+        r4 = self.addHost('r4', cls=MyHost, ip='10.0.1.4/24')
+        r5 = self.addHost('r5', cls=MyHost, ip='10.0.2.2/24')
+        r6 = self.addHost('r6', cls=MyHost, ip='10.0.3.2/24')
+        r7 = self.addHost('r7', cls=MyHost, ip='10.0.4.2/24')
 
         info("*** Creating hosts\n")
-        h1 = self.addHost('h1', cls = MyHost, ip = '192.168.1.1/24', defaultRoute = 'via 192.168.1.2/24')
-        h2 = self.addHost('h2', cls = MyHost, ip = '192.168.2.1/24', defaultRoute = 'via 192.168.2.2/24')
-        h3 = self.addHost('h3', cls = MyHost, ip = '192.168.3.1/24', defaultRoute = 'via 192.168.3.2/24')
-        h4 = self.addHost('h4', cls = MyHost, ip = '192.168.4.1/24', defaultRoute = 'via 192.168.4.2/24')
+        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', defaultRoute='via 192.168.1.2/24')
+        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', defaultRoute='via 192.168.2.2/24')
+        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', defaultRoute='via 192.168.3.2/24')
+        h4 = self.addHost('h4', cls=MyHost, ip='192.168.4.1/24', defaultRoute='via 192.168.4.2/24')
 
         # Establishing the links from hosts to routers
         info("*** Creating links\n")
@@ -121,24 +113,25 @@ class ExampleNet2(Mininet):
         r6.setIP('192.168.3.2/24', intf='r6-eth2')
         r7.setIP('192.168.4.2/24', intf='r7-eth2')
 
+
 class ExampleNet3(Mininet):
     def __init__(self):
-        Mininet.__init__(self, controller = None, cleanup = True)
+        Mininet.__init__(self, controller=None, cleanup=True)
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', cls = MyHost, ip = '10.0.1.1/24')
-        r2 = self.addHost('r2', cls = MyHost, ip = '10.0.1.3/24')
-        r3 = self.addHost('r3', cls = MyHost, ip = '10.0.1.4/24')
-        r4 = self.addHost('r4', cls = MyHost, ip = '10.0.4.1/24')
-        r5 = self.addHost('r5', cls = MyHost, ip = '10.0.3.2/24')
-        r6 = self.addHost('r6', cls = MyHost, ip = '10.0.5.2/24')
+        r1 = self.addHost('r1', cls=MyHost, ip='10.0.1.1/24')
+        r2 = self.addHost('r2', cls=MyHost, ip='10.0.1.3/24')
+        r3 = self.addHost('r3', cls=MyHost, ip='10.0.1.4/24')
+        r4 = self.addHost('r4', cls=MyHost, ip='10.0.4.1/24')
+        r5 = self.addHost('r5', cls=MyHost, ip='10.0.3.2/24')
+        r6 = self.addHost('r6', cls=MyHost, ip='10.0.5.2/24')
 
         info("*** Creating hosts\n")
-        h1 = self.addHost('h1', cls = MyHost, ip = '192.168.1.1/24', defaultRoute = 'via 192.168.1.2/24')
-        h2 = self.addHost('h2', cls = MyHost, ip = '192.168.2.1/24', defaultRoute = 'via 192.168.2.2/24')
-        h3 = self.addHost('h3', cls = MyHost, ip = '192.168.3.1/24', defaultRoute = 'via 192.168.3.2/24')
-        h4 = self.addHost('h4', cls = MyHost, ip = '192.168.4.1/24', defaultRoute = 'via 192.168.4.2/24')
+        h1 = self.addHost('h1', cls=MyHost, ip='192.168.1.1/24', defaultRoute='via 192.168.1.2/24')
+        h2 = self.addHost('h2', cls=MyHost, ip='192.168.2.1/24', defaultRoute='via 192.168.2.2/24')
+        h3 = self.addHost('h3', cls=MyHost, ip='192.168.3.1/24', defaultRoute='via 192.168.3.2/24')
+        h4 = self.addHost('h4', cls=MyHost, ip='192.168.4.1/24', defaultRoute='via 192.168.4.2/24')
 
         # Establishing the links from hosts to routers
         info("*** Creating links\n")
@@ -182,11 +175,13 @@ if __name__ == '__main__':
     # Start listener on all routers and clients
     for node in net.hosts:
         node.start_listener()
+        if node.isStaticRP():
+            node.staticRPRoutine()
 
     # Learn topo/djititjariasdj algortithm
 
     # Send multicast packet from host
-    
+
     # whatever else
 
     CLI(net)
