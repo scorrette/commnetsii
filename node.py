@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import struct
 import sys
+from topoToGraph import getNodeHopMap
 from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
 
@@ -66,10 +67,46 @@ class host:
             if (inp == "multicast"):
                 self.multicast()
 
-    def staticRPRoutine(self):
+    def staticRPRoutine(self,k,n,net):
         # TODO add dijkstra here. Calculate Dyn RP
-        pass
-
+        MasterNodeHopMap= getNodeHopMap(net)
+        dist_array=[]
+        router_longest_dist=[]  #array of longest dist of each router
+        ideal_router????
+        for routerNodeHopMap in MasterNodeHopMap:
+            for dest in routerNodeHopMap:
+                dist_array.append(dest[1])
+            dist_array = insertionSort(dist_array)  #sort array
+            if k == n:
+                router_longest_dist.append(dist_array[n-1])   #append the longest dist required for that router which is that last element in the array
+            else:
+                router_longest_dist.append(dist_array[k-1])  #otherwise append longest dist depending on K
+            
+        index = 0   #index of ideal/dynamic rp
+        shortest=1000  #just intialize shortest dist to some default high number that will not be valid for the topo
+        for i in range(len(router_longest_dist)):
+            if router_longest_dist[i] < shortest:
+                shortest = router_longest_dist[i]
+                index = i
+        router_name = "r" + str(index+1)  #assuming router starts at r1 and increments, and all the routers from the nodehopmap are sorted in ascending order(they should be)
+        return router_name  #**return string, name of the router, instead of the actual router node**
+    def insertionSort(arr):
+         
+        if (n := len(arr)) <= 1:
+          return arr
+        for i in range(1, n):
+             
+            key = arr[i]
+     
+            # Move elements of arr[0..i-1], that are
+            # greater than key, to one position ahead
+            # of their current position
+            j = i-1
+            while j >=0 and key < arr[j] :
+                    arr[j+1] = arr[j]
+                    j -= 1
+            arr[j+1] = key
+        return arr
 
 if __name__ == '__main__':
 
