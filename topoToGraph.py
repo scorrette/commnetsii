@@ -17,7 +17,7 @@ def createGraph(h_count, r_count,nodes,links):
     staticRP =""
 
     #find name of statiicRP which is assumed to be the router connected to h1
-    for each in links:
+    for link in links:
         if link[0] == "h1":
             staticRP = link[1]
         elif link[1] == "h1":
@@ -27,7 +27,7 @@ def createGraph(h_count, r_count,nodes,links):
     for x in range(v_count):
         for y in range(v_count):
             for link in links:  #iterates over each tuple which represents a link
-                if (nodes_list[x] == links[0] and nodes_list[y] == link[1] or (nodes_list[y] == link[0] and nodes_list[x] == link[1]):
+                if (nodes_list[x] == links[0] and nodes_list[y] == link[1]) or (nodes_list[y] == link[0] and nodes_list[x] == link[1]):
                     g.graph[x][y] = 1
                     g.graph[y][x] = 1
                 elif x == y:
@@ -37,7 +37,7 @@ def createGraph(h_count, r_count,nodes,links):
             
     # picks first router which we assume to be default RP as source, and returns distance list with corresponding vertice as index after dijkstra
     
-    for j in range r_count:  #find nodehop map for each router
+    for j in range(r_count):  #find nodehop map for each router
         dist = g.dijkstra(h_count+j)
         router_nodeHop=[]
         for i in range(h_count):

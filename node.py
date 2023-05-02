@@ -97,7 +97,8 @@ class MyHost (Node):
         for routerNodeHopMap in MasterNodeHopMap:
             for dest in routerNodeHopMap:
                 dist_array.append(dest[1])
-            dist_array = insertionSort(dist_array)  #sort array
+            # dist_array = insertionSort(dist_array)  #sort array
+            insertionSort(dist_array)  #sort array
             if k == n:
                 router_longest_dist.append(dist_array[n-1])   #append the longest dist required for that router which is that last element in the array
             else:

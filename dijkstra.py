@@ -61,4 +61,5 @@ class Graph():
                    dist[v] > dist[u] + self.graph[u][v]):
                     dist[v] = dist[u] + self.graph[u][v]
  
-        self.printSolution(dist)
+        # self.printSolution(dist)
+        return dist
