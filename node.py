@@ -116,11 +116,10 @@ class MyHost (Node):
 if __name__ == '__main__':
 
     # TODO change ip assignment and static RP to sys arg
-    isStaticRP = True
     # name, id, ip, port, isStaticRP
-    h = MyHost(sys.argv[0], sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    h = MyHost(sys.argv[1], int(sys.argv[2]), sys.argv[3], int(sys.argv[4]), sys.argv[5] == 'True')
 
-    if isStaticRP:
-        h.staticRPRoutine()
+    # if sys.argv[5] == 'True':
+    #     h.staticRPRoutine()
 
-    h.listen()
+    h.start_listener()
