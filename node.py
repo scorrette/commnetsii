@@ -71,7 +71,7 @@ class MyHost (Node):
 
 
 
-    def staticRPRoutine(self,k,n,net):
+    def staticRPRoutine(self,k,n):
         def insertionSort(arr):
 
             if (n := len(arr)) <= 1:
@@ -91,7 +91,7 @@ class MyHost (Node):
             return
 
         # TODO add dijkstra here. Calculate Dyn RP
-        MasterNodeHopMap= getNodeHopMap(net)
+        MasterNodeHopMap= getNodeHopMap()
         dist_array=[]
         router_longest_dist=[]  #array of longest dist of each router
         for routerNodeHopMap in MasterNodeHopMap:
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     # name, id, ip, port, isStaticRP
     h = MyHost(sys.argv[1], int(sys.argv[2]), sys.argv[3], int(sys.argv[4]), sys.argv[5] == 'True')
 
-    # if sys.argv[5] == 'True':
-    #     h.staticRPRoutine()
+    if sys.argv[5] == 'True':
+         h.staticRPRoutine(2,3)
 
     h.start_listener()
