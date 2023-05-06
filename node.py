@@ -24,6 +24,7 @@ class MyHost(Node):
         self.ip = ip
         self.port = port
         self.staticRP = isStaticRP
+        self.dynamicRP = None
 
     def start_listener(self):
         s = socket(AF_INET, SOCK_DGRAM)
@@ -62,8 +63,21 @@ class MyHost(Node):
 
                     # If the packet was a multicast packet destined for itself
                     if contentType == 3:
-                        # TODO two behaviors. If this is static RP, forward to dynamic RP. If this is not (then this is dynamic RP) split and unicast packet forward
-                        pass
+                        if self.staticRP and not (self.name == self.dynamicRP):
+                            # This is staticRP, forward to dynamic RP
+                            # Special case: If staticRP is also dynamicRP treat it as dynamic RP
+                            print(self.name + " received multicast packet destined for itself")
+                            print(self.name + " this is a staticRP, forwarding to dynamicRP. Destination " + self.dynamicRP)
+                            newDestIP = staticTables.nodes[TOPO_NUM][self.dynamicRP]
+                            newPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(newDestIP),data)
+
+                            nextHopName = staticTables.routes[TOPO_NUM][self.name][self.dynamicRP]
+                            nextHopIP = staticTables.nodes[nextHopName]
+
+                            s.sendto(newPkt, (nextHopIP,8888))
+                        else:
+                            # Dynamic RP
+                            pass
 
                     else:
                         print(self.name + " received packet from: " + srcName)
@@ -79,13 +93,13 @@ class MyHost(Node):
 
     def multicast(self):
         # IP of all destinations as string
-        destsStr = [staticTables.nodes[TOPO_NUM][x] for x in staticTables.multicast_destinations_ex1]
+        destsStr = [staticTables.nodes[TOPO_NUM][x] for x in staticTables.multicast_destinations[TOPO_NUM]]
         dests = [helperMethods.ipv4_to_int() for x in destsStr]
 
         # create multicast packet
         mcPkt = multicast.create_packet(1, 999, self.ipInt, dests, "Multicast Packet!!!")
         print(
-            self.name + " building multicast packet with destinations: " + str(staticTables.multicast_destinations_ex1))
+            self.name + " building multicast packet with destinations: " + str(staticTables.multicast_destinations[TOPO_NUM]))
 
         # encapsulate multicast packet in unicast
         destIP = staticTables.nodes[TOPO_NUM][staticTables.staticRP[TOPO_NUM]]

@@ -40,7 +40,6 @@ nodes = {
         "r5": "10.0.3.2",
         "r6": "10.0.5.2"
     }
-
 }
 
 routes = {
@@ -239,8 +238,9 @@ staticRP = {
     3: "r5"
 }
 
-multicast_destinations_ex1 = [
-    "h1",
-    "h2",
-    "h3"
-]
+multicast_destinations = {
+    1: [
+        "h1",
+        "h2",
+        "h3"]
+}
