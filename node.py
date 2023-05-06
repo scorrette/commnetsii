@@ -13,6 +13,7 @@ import helperMethods
 N = 3
 # number of selected destinations
 K = 2
+TOPO_NUM = 4
 
 
 class MyHost(Node):
@@ -51,10 +52,12 @@ class MyHost(Node):
 
             # Unicast
             if pktType == 4:
-                _, seq, ttl, src, dest = unicast.read_header()
+                _, seq, ttl, src, dest = unicast.read_header(packet)
+                data = unicast.read_content(packet)
+                srcName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(src)]
 
                 if dest == self.ipInt:
-                    pktContent = unicast.read_content()
+                    pktContent = unicast.read_content(data)
                     contentType = struct.unpack("B", pktContent[0:struct.calcsize("B")])
 
                     # If the packet was a multicast packet destined for itself
@@ -63,29 +66,40 @@ class MyHost(Node):
                         pass
 
                     else:
-                        print(self.name + " received packet from: " + src)
+                        print(self.name + " received packet from: " + srcName)
                 else:
-                    # TODO forward packet
-                    pass
+                    destName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(dest)]
+                    print(self.name + " received packet from " + srcName + " destined to " + destName)
 
-                pass
+                    nextHopName = staticTables.routes[TOPO_NUM][self.name][destName]
+
+                    # forwarding
+                    print(self.name + " forwarded packet to " + nextHopName + " with final destination " + destName)
+                    s.sendto(packet, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
 
     def multicast(self):
         # IP of all destinations as string
-        destsStr = [staticTables.nodes_ex1[x] for x in staticTables.multicast_destinations_ex1]
+        destsStr = [staticTables.nodes[TOPO_NUM][x] for x in staticTables.multicast_destinations_ex1]
         dests = [helperMethods.ipv4_to_int() for x in destsStr]
 
         # create multicast packet
         mcPkt = multicast.create_packet(1, 999, self.ipInt, dests, "Multicast Packet!!!")
-        print(self.name + " building multicast packet with destinations: " + str(staticTables.multicast_destinations_ex1))
+        print(
+            self.name + " building multicast packet with destinations: " + str(staticTables.multicast_destinations_ex1))
 
         # encapsulate multicast packet in unicast
-        dest = helperMethods.ipv4_to_int(staticTables.nodes_ex1[staticTables.staticRP_ex1])
+        destIP = staticTables.nodes[TOPO_NUM][staticTables.staticRP[TOPO_NUM]]
+        dest = helperMethods.ipv4_to_int(destIP)
 
         pkt = unicast.create_packet(1, 999, self.ipInt, dest, mcPkt)
-        print(self.name + " encapsulating multicast packet with unicast with destination: " + staticTables.staticRP_ex1)
+        print(self.name + " encapsulating multicast packet with unicast with destination: " + staticTables.staticRP[
+            TOPO_NUM])
 
-
+        s = socket(AF_INET, SOCK_DGRAM)
+        s.bind((self.ip, 8889))
+        nextHopName = staticTables.routes[TOPO_NUM][self.name][staticTables.staticRP[TOPO_NUM]]
+        s.sendto(pkt, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
+        s.close()
 
     def commandListener(self):
         while True:

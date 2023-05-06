@@ -5,6 +5,7 @@ from mininet.cli import CLI
 from mininet.clean import Cleanup
 from node import MyHost
 
+TOPO_NUM = 4
 
 class ExampleNet1(Mininet):
     def __init__(self):
@@ -168,7 +169,14 @@ if __name__ == '__main__':
 
     Cleanup.cleanup()
 
-    net = ExampleNet3()
+    if TOPO_NUM == 1:
+        net = ExampleNet1()
+    if TOPO_NUM == 2:
+        net = ExampleNet2()
+    if TOPO_NUM == 3:
+        net = ExampleNet3()
+    if TOPO_NUM == 4:
+        net = ExampleNet4()
     net.build()
     net.start()
 
