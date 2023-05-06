@@ -10,7 +10,10 @@ def create_packet(seq, ttl, src, dest, data):
     """Create a new packet based on given id"""
     # pktType(1),  seq(1), ttl(1),  src(4), dest(4)
     header = struct.pack(PACK_FORMAT, PKT_TYPE, seq, ttl, src, dest)
-    return header + bytes(data, "utf-8")
+
+    if type(data) is str:
+        data = bytes(data, "utf-8")
+    return header + data
 
 
 def read_header(pkt):

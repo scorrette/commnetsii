@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # define network both here and on top level file
 
+
 nodes_ex1 = {
     "h1": "192.168.1.1",
     "h2": "192.168.2.1",
@@ -14,8 +15,8 @@ nodes_ex1 = {
     "r7": "10.0.7.1",
     "r8": "10.0.7.2",
     "r9": "10.0.6.2"
-
 }
+
 nodes_ex2 = {
     "h1": "192.168.1.1",
     "h2": "192.168.2.1",
@@ -89,4 +90,14 @@ links_ex3 = [
     ("r6","h3"),
     ("r6","h4")
     
+]
+
+staticRP_ex1 = "r5"
+staticRP_ex2 = "r3"
+staticRP_ex3 = "r5"
+
+multicast_destinations_ex1 = [
+    "h1",
+    "h2",
+    "h3"
 ]
