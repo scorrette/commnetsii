@@ -164,7 +164,31 @@ class MyHost(Node):
         router_name = "r" + str(
             index + 1)  # assuming router starts at r1 and increments, and all the routers from the nodehopmap are sorted in ascending order(they should be)
         self.dynamicRP = router_name  # **sets name of the router to dynamicRP var of node**
-
+    def dynamicRPRoutine(self,k,n):
+        def insertionSort(map1):
+            if (n := len(map1)) <= 1:
+                return map1
+            for i in range(1, n):
+                key = map1[i]
+                j = i - 1
+                while j >= 0 and key[1] < map1[j][1]:
+                    map1[j + 1] = map1[j]
+                    j -= 1
+                map1[j + 1] = key
+            return
+        index = int(self.name[1])
+        dynamicRPMap =[]
+        dest_list = []
+        count =1
+        MasterNodeHopMap = getNodeHopMap()
+        for routerNodeHopMap in MasterNodeHopMap:
+            if count == index:
+                dynamicRPMap = routerNodeHopMap
+            count +=1
+        insertionSort(dynamicRPMap)  #sorts list of tuples of DynamicRP node map in ascending order of distances in tuple 
+        for i in range(k):
+            dest_list.append(dynamicRPMap[i][0])  #appends first k host names from tuples(does not append the corresponding dist)
+        return dest_list
 
 if __name__ == '__main__':
 
