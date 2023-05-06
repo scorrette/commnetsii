@@ -4,6 +4,7 @@ from mininet.node import Node
 from mininet.log import setLogLevel, info
 from dijkstra import Graph
 from staticTables import nodes_ex1, links_ex1,nodes_ex2, links_ex2,nodes_ex3, links_ex3
+TOPO_NUM = 4
 # create graph based on number of vertices
 def createGraph(h_count, r_count,nodes,links):
     v_count = h_count + r_count #total node/vertice count
@@ -58,4 +59,4 @@ def getNodeHopMap( ):
         else:
             rcount = rcount + 1
 
-    return createGraph(hcount, rcount,nodes_ex1,links_ex1)
+    return createGraph(hcount, rcount,nodes[TOPO_NUM],links[TOPO_NUM])
