@@ -14,6 +14,7 @@ N = 3
 # number of selected destinations
 K = 2
 TOPO_NUM = 4
+DEFAULT_HOPS = 64
 
 
 class MyHost(Node):
@@ -54,6 +55,11 @@ class MyHost(Node):
             # Unicast
             if pktType == 4:
                 _, seq, ttl, src, dest = unicast.read_header(packet)
+                ttl -= 1
+                if ttl == 0:
+                    print(self.name + " packet received but ran out of TTL")
+                    continue
+
                 data = unicast.read_content(packet)
                 srcName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(src)]
 
@@ -78,7 +84,7 @@ class MyHost(Node):
                                 print(
                                     self.name + " this is a staticRP, forwarding to dynamicRP. Destination " + self.dynamicRP)
                                 newDestIP = staticTables.nodes[TOPO_NUM][self.dynamicRP]
-                                newPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(newDestIP), data)
+                                newPkt = unicast.create_packet(1, DEFAULT_HOPS, src, helperMethods.ipv4_to_int(newDestIP), data)
 
                                 nextHopName = staticTables.routes[TOPO_NUM][self.name][self.dynamicRP]
                                 nextHopIP = staticTables.nodes[nextHopName]
@@ -97,7 +103,7 @@ class MyHost(Node):
                             for destName in finalDests:
                                 print(self.name + " sending unicast packet to " + destName)
                                 destIP = staticTables.nodes[TOPO_NUM][destName]
-                                outPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(destIP), mcData)
+                                outPkt = unicast.create_packet(1, DEFAULT_HOPS, src, helperMethods.ipv4_to_int(destIP), mcData)
                                 nextHopName = staticTables.routes[TOPO_NUM][self.name][destName]
                                 nextHopIP = staticTables.nodes[TOPO_NUM][nextHopName]
 
