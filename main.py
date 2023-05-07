@@ -226,7 +226,7 @@ if __name__ == '__main__':
     if TOPO_NUM == 3:
         net = ExampleNet3()
     if TOPO_NUM == 4:
-        net = ExampleNet4()
+        net = DemoNet()
     net.build()
     net.start()
 
