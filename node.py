@@ -4,7 +4,7 @@ import sys
 from topoToGraph import getNodeHopMap
 from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
-from packets import hello, helloACK, multicast, unicast
+from packets import ack, hello, helloACK, multicast, unicast
 from mininet.node import Node
 import staticTables
 import helperMethods
@@ -115,6 +115,20 @@ class MyHost(Node):
 
                     # forwarding
                     print(self.name + " forwarded packet to " + nextHopName + " with final destination " + destName)
+                    s.sendto(packet, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
+            # ACK packet
+            if pktType == 5:
+                pkttype, seq, src, dest = ack.read_header(packet)
+                # if ack packet was destined for host
+                if dest == self.ipInt:
+                    print(self.name + " received acknowledgement from: " + src)
+                # packet is meant for someone else. Forward
+                else:
+                    print(self.name + " received an ACK packet destined for " + dest + ". Forwarding...")
+
+                    destName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(dest)]
+                    nextHopName = staticTables.routes[TOPO_NUM][self.name][destName]
+
                     s.sendto(packet, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
 
     def multicast(self, k):
