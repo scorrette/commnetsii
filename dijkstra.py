@@ -28,7 +28,7 @@ class Graph():
  
         for cout in range(self.V):
             min_dist = self.minDistance(dist, shortestpathSet)
-            shortestpathSet[u] = True
+            shortestpathSet[min_dist] = True
  
             for each in range(self.V):
                 if (self.graph[min_dist][each] > 0 and
