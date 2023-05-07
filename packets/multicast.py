@@ -20,6 +20,7 @@ def create_packet(seq, ttl, kval, dests, data):
 def read_header(pkt):
     header = pkt[0:struct.calcsize(PACK_FORMAT)]
     # pktFormat = "BBBLL"
+    print()
     pkttype, seq, ttl, kval, dest1, dest2, dest3 = struct.unpack(PACK_FORMAT, header)
     dests = [dest1, dest2, dest3]
 
@@ -27,5 +28,4 @@ def read_header(pkt):
 
 
 def read_data(pkt):
-    # TODO
-    pass
+    return pkt[struct.calcsize(PACK_FORMAT):]

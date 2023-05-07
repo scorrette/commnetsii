@@ -232,10 +232,11 @@ if __name__ == '__main__':
     net.start()
 
     # Start listener on all routers and clients
-    for node in net.hosts:
-        # name, id, ip, port, isStaticRP
-        script = "python3 ./node.py " + node.name + " " + node.params["ip"][:-3] + " " + node.params["port"] + " " + node.params["staticRP"] + " &"
-        node.cmd(script)
+    # for node in net.hosts:
+    #     # name, id, ip, port, isStaticRP
+    #     script = "python3 ./node.py " + node.name + " " + node.params["ip"][:-3] + " " + node.params["port"] + " " + node.params["staticRP"] + " &"
+    #     node.cmd(script)
+    #     print(script)
 
     # Learn topo/djititjariasdj algortithm
 
