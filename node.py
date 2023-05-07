@@ -63,20 +63,28 @@ class MyHost(Node):
 
                     # If the packet was a multicast packet destined for itself
                     if contentType == 3:
-                        if self.staticRP and not (self.name == self.dynamicRP):
-                            # This is staticRP, forward to dynamic RP
-                            # Special case: If staticRP is also dynamicRP treat it as dynamic RP
-                            print(self.name + " received multicast packet destined for itself")
-                            print(self.name + " this is a staticRP, forwarding to dynamicRP. Destination " + self.dynamicRP)
-                            newDestIP = staticTables.nodes[TOPO_NUM][self.dynamicRP]
-                            newPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(newDestIP),data)
+                        if self.staticRP:
+                            # Calculate dynamic RP
+                            print(self.name + " this is a staticRP node and received a multicast packet")
+                            print(self.name + " calculating dynamicRP")
+                            self.staticRPRoutine(K, N)
 
-                            nextHopName = staticTables.routes[TOPO_NUM][self.name][self.dynamicRP]
-                            nextHopIP = staticTables.nodes[nextHopName]
+                            # Forward to dynamic RP
+                            if not (self.name == self.dynamicRP):
+                                # Special case: If staticRP is also dynamicRP treat it as dynamic RP
+                                print(self.name + " received multicast packet destined for itself")
+                                print(
+                                    self.name + " this is a staticRP, forwarding to dynamicRP. Destination " + self.dynamicRP)
+                                newDestIP = staticTables.nodes[TOPO_NUM][self.dynamicRP]
+                                newPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(newDestIP), data)
 
-                            s.sendto(newPkt, (nextHopIP,8888))
-                        else:
-                            # Dynamic RP
+                                nextHopName = staticTables.routes[TOPO_NUM][self.name][self.dynamicRP]
+                                nextHopIP = staticTables.nodes[nextHopName]
+
+                                s.sendto(newPkt, (nextHopIP, 8888))
+                        elif self.name == self.dynamicRP:
+                            
+                            # TODO
                             pass
 
                     else:
@@ -91,15 +99,16 @@ class MyHost(Node):
                     print(self.name + " forwarded packet to " + nextHopName + " with final destination " + destName)
                     s.sendto(packet, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
 
-    def multicast(self):
+    def multicast(self, k):
         # IP of all destinations as string
         destsStr = [staticTables.nodes[TOPO_NUM][x] for x in staticTables.multicast_destinations[TOPO_NUM]]
         dests = [helperMethods.ipv4_to_int() for x in destsStr]
 
         # create multicast packet
-        mcPkt = multicast.create_packet(1, 999, self.ipInt, dests, "Multicast Packet!!!")
+        mcPkt = multicast.create_packet(1, 999, k, dests, "Multicast Packet!!!")
         print(
-            self.name + " building multicast packet with destinations: " + str(staticTables.multicast_destinations[TOPO_NUM]))
+            self.name + " building multicast packet with destinations: " + str(
+                staticTables.multicast_destinations[TOPO_NUM]))
 
         # encapsulate multicast packet in unicast
         destIP = staticTables.nodes[TOPO_NUM][staticTables.staticRP[TOPO_NUM]]
@@ -117,9 +126,10 @@ class MyHost(Node):
 
     def commandListener(self):
         while True:
-            inp = input()
-            if (inp == "multicast"):
-                self.multicast()
+            inp = input().split(" ")
+            if (inp[0] == "multicast"):
+                print(self.name + " received multicast command with Kval of " + inp[1])
+                self.multicast(int(inp[1]))
 
     def staticRPRoutine(self, k, n):
         def insertionSort(arr):
@@ -164,7 +174,8 @@ class MyHost(Node):
         router_name = "r" + str(
             index + 1)  # assuming router starts at r1 and increments, and all the routers from the nodehopmap are sorted in ascending order(they should be)
         self.dynamicRP = router_name  # **sets name of the router to dynamicRP var of node**
-    def dynamicRPRoutine(self,k,n):
+
+    def dynamicRPRoutine(self, k, n):
         def insertionSort(map1):
             if (n := len(map1)) <= 1:
                 return map1
@@ -176,27 +187,27 @@ class MyHost(Node):
                     j -= 1
                 map1[j + 1] = key
             return
+
         index = int(self.name[1])
-        dynamicRPMap =[]
+        dynamicRPMap = []
         dest_list = []
-        count =1
+        count = 1
         MasterNodeHopMap = getNodeHopMap()
         for routerNodeHopMap in MasterNodeHopMap:
             if count == index:
                 dynamicRPMap = routerNodeHopMap
-            count +=1
-        insertionSort(dynamicRPMap)  #sorts list of tuples of DynamicRP node map in ascending order of distances in tuple 
+            count += 1
+        insertionSort(
+            dynamicRPMap)  # sorts list of tuples of DynamicRP node map in ascending order of distances in tuple
         for i in range(k):
-            dest_list.append(dynamicRPMap[i][0])  #appends first k host names from tuples(does not append the corresponding dist)
+            dest_list.append(
+                dynamicRPMap[i][0])  # appends first k host names from tuples(does not append the corresponding dist)
         return dest_list
 
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     # TODO change ip assignment and static RP to sys arg
     # name, ip, port, isStaticRP
     h = MyHost(sys.argv[1], sys.argv[2], int(sys.argv[3]), sys.argv[4] == 'True')
-
-    if sys.argv[4] == 'True':
-        h.staticRPRoutine(K, N)
 
     h.start_listener()
