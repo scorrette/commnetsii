@@ -169,13 +169,13 @@ class DemoNet(Mininet):
 
         # Creating Hosts
         info("*** Creating routers\n")
-        r1 = self.addHost('r1', ip='10.0.1.1/24', port='8888', staticRP='True')
-        r2 = self.addHost('r2', ip='10.0.1.3/24', port='8888', staticRP='False')
-        r3 = self.addHost('r3', ip='10.0.1.4/24', port='8888', staticRP='False')
-        r4 = self.addHost('r4', ip='10.0.3.3/24', port='8888', staticRP='False')
-        r5 = self.addHost('r5', ip='10.0.3.4/24', port='8888', staticRP='False')
-        r6 = self.addHost('r6', ip='10.0.2.3/24', port='8888', staticRP='False')
-        r7 = self.addHost('r7', ip='10.0.6.2/24', port='8888', staticRP='False')
+        r1 = self.addHost('r1', ip='10.0.2.2/24', port='8888', staticRP='True')
+        r2 = self.addHost('r2', ip='10.0.2.1/24', port='8888', staticRP='False')
+        r3 = self.addHost('r3', ip='10.0.3.1/24', port='8888', staticRP='False')
+        r4 = self.addHost('r4', ip='10.0.4.1/24', port='8888', staticRP='False')
+        r5 = self.addHost('r5', ip='10.0.5.1/24', port='8888', staticRP='False')
+        r6 = self.addHost('r6', ip='10.0.6.1/24', port='8888', staticRP='False')
+        r7 = self.addHost('r7', ip='10.0.7.1/24', port='8888', staticRP='False')
 
         info("*** Creating hosts\n")
         h1 = self.addHost('h1', ip='192.168.1.1/24', port='8888', staticRP='False', defaultRoute='via 192.168.1.2/24')
@@ -200,13 +200,14 @@ class DemoNet(Mininet):
 
         # Setting interface ip addresses since params1 or params2 just will not work
         info("*** Initializing IPs\n")
-        r1.setIP('10.0.1.2/24', intf='r1-eth1')
-        r2.setIP('10.0.2.1/24', intf='r2-eth1')
-        r3.setIP('10.0.2.2/24', intf='r3-eth1')
-        r3.setIP('10.0.3.1/24', intf='r3-eth2')
-        r3.setIP('10.0.3.2/24', intf='r3-eth3')
+        r1.setIP('10.0.3.2/24', intf='r1-eth1')
+        r2.setIP('10.1.2.1/24', intf='r2-eth1')
+        r2.setIP('10.0.6.2/24', intf='r2-eth2')
+        r3.setIP('10.1.2.2/24', intf='r3-eth1')
+        r3.setIP('10.0.4.2/24', intf='r3-eth2')
+        r3.setIP('10.0.5.2/24', intf='r3-eth3')
 
-        r6.setIP('10.0.6.1/24', intf='r6-eth1')
+        r6.setIP('10.0.7.2/24', intf='r6-eth1')
 
         r1.setIP('192.168.1.2/24', intf='r1-eth2')
         r7.setIP('192.168.2.2/24', intf='r7-eth1')
