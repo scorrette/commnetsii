@@ -4,7 +4,7 @@ import sys
 from topoToGraph import getNodeHopMap
 from socket import socket, AF_INET, SOCK_DGRAM
 from threading import Thread
-from packets import hello, helloACK, multicast, unicast
+from packets import ack, hello, helloACK, multicast, unicast
 from mininet.node import Node
 import staticTables
 import helperMethods
@@ -14,6 +14,7 @@ N = 3
 # number of selected destinations
 K = 2
 TOPO_NUM = 4
+DEFAULT_HOPS = 64
 
 
 class MyHost(Node):
@@ -54,10 +55,16 @@ class MyHost(Node):
             # Unicast
             if pktType == 4:
                 _, seq, ttl, src, dest = unicast.read_header(packet)
+                ttl -= 1
+                if ttl == 0:
+                    print(self.name + " packet received but ran out of TTL")
+                    continue
+
                 data = unicast.read_content(packet)
                 srcName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(src)]
 
                 if dest == self.ipInt:
+                    # packet is destined for itself
                     pktContent = unicast.read_content(data)
                     contentType = struct.unpack("B", pktContent[0:struct.calcsize("B")])
 
@@ -68,6 +75,7 @@ class MyHost(Node):
                             print(self.name + " this is a staticRP node and received a multicast packet")
                             print(self.name + " calculating dynamicRP")
                             self.staticRPRoutine(K, N)
+                            print(self.name + " dynamicRP found target node: " + self.dynamicRP)
 
                             # Forward to dynamic RP
                             if not (self.name == self.dynamicRP):
@@ -76,20 +84,36 @@ class MyHost(Node):
                                 print(
                                     self.name + " this is a staticRP, forwarding to dynamicRP. Destination " + self.dynamicRP)
                                 newDestIP = staticTables.nodes[TOPO_NUM][self.dynamicRP]
-                                newPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(newDestIP), data)
+                                newPkt = unicast.create_packet(1, DEFAULT_HOPS, src, helperMethods.ipv4_to_int(newDestIP), data)
 
                                 nextHopName = staticTables.routes[TOPO_NUM][self.name][self.dynamicRP]
                                 nextHopIP = staticTables.nodes[nextHopName]
 
                                 s.sendto(newPkt, (nextHopIP, 8888))
-                        elif self.name == self.dynamicRP:
-                            
-                            # TODO
-                            pass
+                        if self.name == self.dynamicRP:
+                            print(self.name + " dynamicRP received multicast packet, breaking up and forwarding...")
+
+                            pkttype, seq, ttl, kval, dests = multicast.read_header()
+                            mcData = multicast.read_data()
+
+                            # find which destinations to drop
+                            finalDests = self.dynamicRPRoutine(kval)
+
+                            # for each destination send an unicast packet for them
+                            for destName in finalDests:
+                                print(self.name + " sending unicast packet to " + destName)
+                                destIP = staticTables.nodes[TOPO_NUM][destName]
+                                outPkt = unicast.create_packet(1, DEFAULT_HOPS, src, helperMethods.ipv4_to_int(destIP), mcData)
+                                nextHopName = staticTables.routes[TOPO_NUM][self.name][destName]
+                                nextHopIP = staticTables.nodes[TOPO_NUM][nextHopName]
+
+                                s.sendto(outPkt, (nextHopIP, 8888))
 
                     else:
-                        print(self.name + " received packet from: " + srcName)
+                        # Unicast packet destined for itself
+                        print(self.name + " received packet from " + srcName + " with payload: " + data)
                 else:
+                    # packet was not destined for itself
                     destName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(dest)]
                     print(self.name + " received packet from " + srcName + " destined to " + destName)
 
@@ -97,6 +121,20 @@ class MyHost(Node):
 
                     # forwarding
                     print(self.name + " forwarded packet to " + nextHopName + " with final destination " + destName)
+                    s.sendto(packet, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
+            # ACK packet
+            if pktType == 5:
+                pkttype, seq, src, dest = ack.read_header(packet)
+                # if ack packet was destined for host
+                if dest == self.ipInt:
+                    print(self.name + " received acknowledgement from: " + src)
+                # packet is meant for someone else. Forward
+                else:
+                    print(self.name + " received an ACK packet destined for " + dest + ". Forwarding...")
+
+                    destName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(dest)]
+                    nextHopName = staticTables.routes[TOPO_NUM][self.name][destName]
+
                     s.sendto(packet, (staticTables.nodes[TOPO_NUM][nextHopName], 8888))
 
     def multicast(self, k):
