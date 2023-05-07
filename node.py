@@ -58,6 +58,7 @@ class MyHost(Node):
                 srcName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(src)]
 
                 if dest == self.ipInt:
+                    # packet is destined for itself
                     pktContent = unicast.read_content(data)
                     contentType = struct.unpack("B", pktContent[0:struct.calcsize("B")])
 
@@ -68,6 +69,7 @@ class MyHost(Node):
                             print(self.name + " this is a staticRP node and received a multicast packet")
                             print(self.name + " calculating dynamicRP")
                             self.staticRPRoutine(K, N)
+                            print(self.name + " dynamicRP found target node: " + self.dynamicRP)
 
                             # Forward to dynamic RP
                             if not (self.name == self.dynamicRP):
@@ -82,14 +84,30 @@ class MyHost(Node):
                                 nextHopIP = staticTables.nodes[nextHopName]
 
                                 s.sendto(newPkt, (nextHopIP, 8888))
-                        elif self.name == self.dynamicRP:
-                            
-                            # TODO
-                            pass
+                        if self.name == self.dynamicRP:
+                            print(self.name + " dynamicRP received multicast packet, breaking up and forwarding...")
+
+                            pkttype, seq, ttl, kval, dests = multicast.read_header()
+                            mcData = multicast.read_data()
+
+                            # find which destinations to drop
+                            finalDests = self.dynamicRPRoutine(kval)
+
+                            # for each destination send an unicast packet for them
+                            for destName in finalDests:
+                                print(self.name + " sending unicast packet to " + destName)
+                                destIP = staticTables.nodes[TOPO_NUM][destName]
+                                outPkt = unicast.create_packet(1, 999, src, helperMethods.ipv4_to_int(destIP), mcData)
+                                nextHopName = staticTables.routes[TOPO_NUM][self.name][destName]
+                                nextHopIP = staticTables.nodes[TOPO_NUM][nextHopName]
+
+                                s.sendto(outPkt, (nextHopIP, 8888))
 
                     else:
-                        print(self.name + " received packet from: " + srcName)
+                        # Unicast packet destined for itself
+                        print(self.name + " received packet from " + srcName + " with payload: " + data)
                 else:
+                    # packet was not destined for itself
                     destName = staticTables.nodes_inv[TOPO_NUM][helperMethods.int_to_ipv4(dest)]
                     print(self.name + " received packet from " + srcName + " destined to " + destName)
 
