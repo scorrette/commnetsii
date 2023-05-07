@@ -200,13 +200,13 @@ class DemoNet(Mininet):
 
         # Setting interface ip addresses since params1 or params2 just will not work
         info("*** Initializing IPs\n")
-        r4.setIP('10.0.1.2/24', intf='r1-eth1')
+        r1.setIP('10.0.1.2/24', intf='r1-eth1')
         r2.setIP('10.0.2.1/24', intf='r2-eth1')
-        r1.setIP('10.0.2.2/24', intf='r3-eth1')
+        r3.setIP('10.0.2.2/24', intf='r3-eth1')
         r3.setIP('10.0.3.1/24', intf='r3-eth2')
         r3.setIP('10.0.3.2/24', intf='r3-eth3')
 
-        r3.setIP('10.0.6.1/24', intf='r6-eth1')
+        r6.setIP('10.0.6.1/24', intf='r6-eth1')
 
         r1.setIP('192.168.1.2/24', intf='r1-eth2')
         r7.setIP('192.168.2.2/24', intf='r7-eth1')
