@@ -221,7 +221,7 @@ class MyHost(Node):
                                                n - 1])  # append the longest dist required for that router which is that last element in the array
             else:
                 router_longest_dist.append(dist_array[k - 1])  # otherwise append longest dist depending on K
-
+            dist_array = []
         index = 0  # index of ideal/dynamic rp
         shortest = 1000  # just intialize shortest dist to some default high number that will not be valid for the topo
         for i in range(len(router_longest_dist)):
