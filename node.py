@@ -2,6 +2,7 @@
 import struct
 import sys
 import threading
+import time
 
 from topoToGraph import getNodeHopMap
 from socket import socket, AF_INET, SOCK_DGRAM
@@ -28,6 +29,7 @@ class MyHost(Node):
         self.port = port
         self.staticRP = isStaticRP
         self.dynamicRP = None
+        self.lastPacketSent = 0
 
     def start_listener(self, ip):
         print(self.name + " starting listener with ip: " + ip + "\n")
@@ -141,7 +143,7 @@ class MyHost(Node):
                 destName = staticTables.nodes_inv[TOPO_NUM][dest]
                 # if ack packet was destined for host
                 if dest == self.id:
-                    print(self.name + " received acknowledgement from: " + srcName)
+                    print(self.name + " received acknowledgement from: " + srcName + " took " + str((time.time() - self.lastPacketSent) * 1000) + "ms")
                 # packet is meant for someone else. Forward
                 else:
                     print(self.name + " received an ACK packet destined for " + destName + ". Forwarding...")
@@ -172,6 +174,8 @@ class MyHost(Node):
 
         thisIP, nextHopIP = staticTables.routes[TOPO_NUM][self.name][staticTables.staticRP[TOPO_NUM]]
         self.sendPacket(thisIP, nextHopIP, pkt)
+
+        self.lastPacketSent = time.time()
 
         print(self.name + " packet sent to " + nextHopIP + "\n")
 
